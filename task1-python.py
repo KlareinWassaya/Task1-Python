@@ -64,7 +64,7 @@ def view_tasks(tasks):
         print("Your tasks list is empty\nEnjoy your free day!!\n")
 
 
-# Sort the tasks list based on the priority, 0 is the highest, 5 is the lowest
+# Sort the tasks list based on the priority ascending, 0 is the highest, 5 is the lowest
 def sort_tasks(tasks):
     if tasks:
         tasks.sort(key=lambda x: x["priority"])
