@@ -48,8 +48,6 @@ def add_task(i, tasks):
     tasks.append(task)
     print("Task added Successfully!!\n")
 
-    return tasks
-
 
 # Display the tasks on screen, organized in a simple way for easy human reading
 def view_tasks(tasks):
@@ -67,8 +65,9 @@ def view_tasks(tasks):
 # Sort the tasks list based on the priority ascending, 0 is the highest, 5 is the lowest
 def sort_tasks(tasks):
     if tasks:
-        tasks.sort(key=lambda x: x["priority"])
+        tasks.sort(key=lambda task: task["priority"])
         print("Tasks sorted ascending:")
+        view_tasks(tasks)
     else:
         print("There are no tasks to be sorted")
 
@@ -99,8 +98,6 @@ def mark_as_done(tasks):
             "Your tasks list is empty, try adding a task or filling the tasks.json and restart the program"
         )
 
-    return tasks
-
 
 # Change the priority of a task based on user's input
 def change_priority(tasks):
@@ -110,7 +107,7 @@ def change_priority(tasks):
         # Ask the user to enter the id of the task, handle wrong entry
         while True:
             try:
-                choice = int(input("Choose the task id to its priority: "))
+                choice = int(input("Choose the task id to change its priority: "))
                 while choice < 1 or choice > len(tasks):
                     print("There is no task with this id")
                     choice = int(input("Choose a correct ID: "))
@@ -136,8 +133,6 @@ def change_priority(tasks):
             "Your tasks list is empty, try adding a task or filling the tasks.json and restart the program"
         )
 
-    return tasks
-
 
 # Delete a task based on user's choice
 def delete_task(tasks):
@@ -162,7 +157,7 @@ def delete_task(tasks):
             ).lower()
             == "y"
         ):
-            del tasks[choice - 1]
+            tasks.pop(choice - 1)
             print("Task", choice, "deleted successfully!")
         else:
             print("Task", choice, "is not deleted")
@@ -170,8 +165,6 @@ def delete_task(tasks):
         print(
             "Your tasks list is empty, try adding a task or filling the tasks.json and restart the program"
         )
-
-    return tasks
 
 
 # Display the menu of services that can be done in this program
@@ -195,6 +188,32 @@ def save_to_file(tasks):
     print("Tasks saved to tasks.json file successfully!")
 
 
+# function for sorting tasks based on the user choice either ascending or descending
+def sort_tasks(tasks):
+    if tasks:
+        while True:
+            try:
+                option = int(input("1- Ascending\n2- Descending\n1 or 2?\n"))
+                if option == 1:
+                    print("Sorting Ascending...")
+                    tasks.sort(key=lambda task: task["priority"])
+                    print("Tasks sorted Ascending:")
+                    view_tasks(tasks)
+                    break
+                elif option == 2:
+                    print("Sorting Descending...")
+                    tasks.sort(key=lambda task: task["priority"], reverse=True)
+                    print("Tasks sorted Descending:")
+                    view_tasks(tasks)
+                    break
+                else:
+                    print("No such option")
+            except Exception as e:
+                print("ERROR: ", e)
+    else:
+        print("Your tasks list is empty, nothing found to be sorted")
+
+
 def main():
     # If the tasks.json file is not empty, load its content at the beginning of the run
     try:
@@ -211,18 +230,24 @@ def main():
             match choice:
                 case 1:
                     i = int(len(tasks))
-                    tasks = add_task(i, tasks)
+                    add_task(i, tasks)
                 case 2:
                     view_tasks(tasks)
+                #case 3 if tasks:
+                #    print("Sorting the tasks ...")
+                #    tasks.sort(key=lambda task: task["priority"])
+                #    print("Tasks sorted ascending:")
+                #    view_tasks(tasks)
+                #case 3 if not tasks:
+                #    print("You tasks list is empty, nothing found to be sorted")
                 case 3:
                     sort_tasks(tasks)
-                    view_tasks(tasks)
                 case 4:
-                    tasks = mark_as_done(tasks)
+                    mark_as_done(tasks)
                 case 5:
-                    tasks = change_priority(tasks)
+                    change_priority(tasks)
                 case 6:
-                    tasks = delete_task(tasks)
+                    delete_task(tasks)
                 case 7:
                     save_to_file(tasks)
                 case 8:
