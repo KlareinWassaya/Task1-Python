@@ -233,13 +233,6 @@ def main():
                     add_task(i, tasks)
                 case 2:
                     view_tasks(tasks)
-                #case 3 if tasks:
-                #    print("Sorting the tasks ...")
-                #    tasks.sort(key=lambda task: task["priority"])
-                #    print("Tasks sorted ascending:")
-                #    view_tasks(tasks)
-                #case 3 if not tasks:
-                #    print("You tasks list is empty, nothing found to be sorted")
                 case 3:
                     sort_tasks(tasks)
                 case 4:
