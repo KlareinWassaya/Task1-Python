@@ -2,7 +2,7 @@ import json
 
 
 # Add a new task to the list based on properties entered by the user
-def add_task(i, tasks):
+def add_task(tasks):
     title = str(input("Enter Title of the task: "))  # Request the title of the task
     description = str(
         input("Enter description of the task: ")
@@ -229,8 +229,7 @@ def main():
             choice = int(input(""))
             match choice:
                 case 1:
-                    i = int(len(tasks))
-                    add_task(i, tasks)
+                    add_task(tasks)
                 case 2:
                     view_tasks(tasks)
                 case 3:
