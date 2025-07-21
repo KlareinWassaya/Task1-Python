@@ -68,7 +68,7 @@ def view_tasks(tasks):
 def sort_tasks(tasks):
     if tasks:
         tasks.sort(key=lambda x: x["priority"])
-        print("Tasks sorted ascending:")            
+        print("Tasks sorted ascending:")
     else:
         print("There are no tasks to be sorted")
 
