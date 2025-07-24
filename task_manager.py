@@ -3,18 +3,17 @@ All task management functions collected in this file, add_task, delete_task,
 change_priority, mark_as_done and sort_tasks
 """
 
-from Task import Task
+from task import *
 
 FILENAME = "tasks.json"
 
 
-def handle_wrong_entry(
-    message: str, error_message: str, range_end: int, range_start: int = 0
+def input_valid_integer(
+    message: str, range_end: int, range_start: int = 0
 ):
     """
     Handle the case where user tries to enter invalid entry\n
     message: the prompt to be printed in input()\n
-    error_message: the desired error message to be printed when the input is out of range\n
     range_end: the exclusive end of the ranging period\n
     range_start: 0 by default, the starting of the ranging period, can be modified by user
     """
@@ -23,7 +22,7 @@ def handle_wrong_entry(
             variable = int(input(message))
 
             if variable not in range(range_start, range_end):
-                print(error_message)
+                print(f"Value {variable} is not in range {range_start} -> {range_end - 1}")
             else:
                 return variable
         except Exception as e:
@@ -35,34 +34,27 @@ def add_task(tasks: list):
     """
     Create a new instance of Task and add it to the tasks list
     """
-    task_info = {}
-    for attribute in Task.fields(Task):
-        if attribute == "priority":
-            priority = handle_wrong_entry(
-                message="Enter priority (highest 0 - lowest 5): ",
-                error_message="Priority range from 0 to 5 only!",
-                range_end=6,
-            )
-            task_info[attribute] = priority
-        elif attribute == "status":
-            # user may prefer to choose the status of the task instead of marking it 'in progress' by default
-            for i, status in enumerate(Task.statuses, 1):
-                status = status.name.title().replace("_", " ")
-                print(f"{i}- {status}")
-            statuses_list = list(Task.statuses)
-            status_index = handle_wrong_entry(
-                message="Choose the status of this task: ",
-                error_message="There is no such status, try again!",
-                range_end=len(statuses_list) + 1,
-                range_start=1,
-            )
-            task_info[attribute] = statuses_list[status_index - 1].name.title().replace("_", " ")
-        else:
-            value = input(f"Enter {attribute}: ")
-            task_info[attribute] = value
+    title = input("Enter Title of the task: ")
+    description = input("Enter Description of the task: ")
+    
+    priority = input_valid_integer(
+        message="Enter priority (highest 0 - lowest 5): ",
+        range_end=6,
+    )
+
+    # user may prefer to choose the status of the task instead of marking it 'in progress' by default
+    for i, status in enumerate(statuses, 1):
+        status = status.value
+        print(f"{i}- {status}")
+    status_index = input_valid_integer(
+        message="Choose the status of this task: ",
+        range_end=len(statuses) + 1,
+        range_start=1,
+    )
+    task_status = list(statuses)[status_index - 1].value
 
     # Add a new task as a Task object to the tasks list
-    task = Task.from_dict(Task, d=task_info)
+    task = Task(title, description, priority, task_status)
     tasks.append(task)
     print("Task added Successfully!!\n")
 
@@ -77,7 +69,7 @@ def view_tasks(tasks: list):
     else:
         for i, task in enumerate(tasks, 1):
             print(f"Task {i}")
-            Task.display(task)
+            task.display()
 
 
 # Mark a task as 'done' based on user's input
@@ -95,9 +87,8 @@ def mark_as_done(tasks: list):
         )  # Display the tasks to allow the user to know which task to change
 
         # Ask the user to enter the id of the task, handle wrong entry
-        choice = handle_wrong_entry(
+        choice = input_valid_integer(
             message="Choose the task id to mark as done: ",
-            error_message="There is no task with this id",
             range_end=len(tasks) + 1,
             range_start=1,
         )
@@ -120,17 +111,15 @@ def change_priority(tasks: list):
         view_tasks(tasks)  # Display the tasks to allow user to choose from them
 
         # Ask the user to enter the id of the task, handle wrong entry
-        choice = handle_wrong_entry(
+        choice = input_valid_integer(
             message="Choose the task id to change its priority: ",
-            error_message="There is no such task with this id!",
             range_start=1,
             range_end=len(tasks) + 1,
         )
 
         # Ask the user to enter new value for priority, handle wrong entry
-        new_priority = handle_wrong_entry(
+        new_priority = input_valid_integer(
             message="Enter new priority: ",
-            error_message="Priority range from 0 to 5 only!",
             range_end=6,
         )
 
@@ -152,20 +141,15 @@ def delete_task(tasks: list):
         view_tasks(tasks)  # Display the tasks to allow user to choose from them
 
         # Ask the user to enter the id of the task, handle wrong entry
-        choice = handle_wrong_entry(
+        choice = input_valid_integer(
             message="Choose the task id to be deleted: ",
-            error_message="There is no such task with this id!",
             range_start=1,
             range_end=len(tasks) + 1,
         )
 
         # allow the user to think again before deleting a task
-        if (
-            (
-                str(input(f"Are you sure you want to delete task {choice}? (y/n): "))[0]
-            ).lower()
-            == "y"
-        ):
+        confirm = input(f"Are you sure you want to delete task {choice}? (y/n): ")[0].lower()
+        if confirm == "y":
             tasks.pop(choice - 1)
             print(f"Task {choice} deleted successfully!")
         else:
@@ -180,9 +164,8 @@ def sort_tasks(tasks: list):
     if not tasks:
         print("Your tasks list is empty, nothing found to be sorted")
     else:
-        option = handle_wrong_entry(
+        option = input_valid_integer(
             message="1- Ascending\n2- Descending\n1 or 2?\n",
-            error_message="No such option",
             range_start=1,
             range_end=3,
         )

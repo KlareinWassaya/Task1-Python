@@ -1,38 +1,17 @@
 from enum import Enum
 
+class statuses(Enum):
+    NOT_STARTED = "Not Started"
+    IN_PROGRESS = "In Progress"
+    DONE = "Done"
 
 class Task:
-    statuses = Enum("statuses", "NOT_STARTED IN_PROGRESS DONE")
 
     def __init__(self, title: str, description: str, priority: int, status: str):
         self.title = title
         self.description = description
         self.priority = priority
         self.status = status
-
-    def fields(self):
-        """
-        Return the name of properties to be filled in this function
-        """
-        return ["title", "description", "priority", "status"]
-    
-    def to_dict(self):
-        """
-        Convert the type of task to dictionary for saving in json file
-        """
-        return {
-            "title": self.title,
-            "description": self.description,
-            "priority": self.priority,
-            "status": self.status
-        }
-
-    def from_dict(self, d):  
-        """
-        Create a Task object from a dictionary\n
-        d: a dictionary having its keys the same as the Task attributes
-        """
-        return self(d["title"], d["description"], d["priority"], d["status"])
     
     def display(self):
         """
@@ -45,7 +24,7 @@ class Task:
         """
         Change the value of status property to 'Done'
         """
-        self.status = "Done"
+        self.status = (statuses.DONE).value
 
     def update_priority(self, value: int):
         """

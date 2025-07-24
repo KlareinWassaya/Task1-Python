@@ -1,5 +1,5 @@
 import json
-from TaskManager import *
+from task_manager import *
 
 
 # Display the menu of services that can be done in this program
@@ -24,9 +24,7 @@ def save_to_file(tasks: list):
     """
     Save the list of tasks to tasks.json file
     """
-    tasks_list = []
-    for task in tasks:
-        tasks_list.append(task.to_dict())
+    tasks_list = [task.__dict__ for task in tasks]
     with open(FILENAME, "w") as file:
         json.dump(tasks_list, file, indent=4)
 
@@ -38,9 +36,8 @@ def main():
     try:
         with open(FILENAME, "r") as file:
             loaded_tasks = json.load(file)
-        tasks = [Task.from_dict(Task, d=task) for task in loaded_tasks]
-    except Exception as e:
-        print(f"ERROR: {e}")
+        tasks = [Task(**task) for task in loaded_tasks]
+    except:
         tasks = []  # define tasks as a list
 
     display_menu()
