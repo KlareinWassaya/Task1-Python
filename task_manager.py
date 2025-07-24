@@ -43,15 +43,15 @@ def add_task(tasks: list):
     )
 
     # user may prefer to choose the status of the task instead of marking it 'in progress' by default
-    for i, status in enumerate(statuses, 1):
+    for i, status in enumerate(TaskStatuses, 1):
         status = status.value
         print(f"{i}- {status}")
     status_index = input_valid_integer(
         message="Choose the status of this task: ",
-        range_end=len(statuses) + 1,
+        range_end=len(TaskStatuses) + 1,
         range_start=1,
     )
-    task_status = list(statuses)[status_index - 1].value
+    task_status = list(TaskStatuses)[status_index - 1].value
 
     # Add a new task as a Task object to the tasks list
     task = Task(title, description, priority, task_status)

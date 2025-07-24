@@ -1,6 +1,6 @@
 from enum import Enum
 
-class statuses(Enum):
+class TaskStatuses(Enum):
     NOT_STARTED = "Not Started"
     IN_PROGRESS = "In Progress"
     DONE = "Done"
@@ -24,7 +24,7 @@ class Task:
         """
         Change the value of status property to 'Done'
         """
-        self.status = (statuses.DONE).value
+        self.status = (TaskStatuses.DONE).value
 
     def update_priority(self, value: int):
         """
